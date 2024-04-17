@@ -1,11 +1,13 @@
 package org.basalt.main.customer.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.basalt.main.common.config.entityaudit.EntityAudit;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -21,8 +23,8 @@ import java.util.UUID;
 public class Customer extends EntityAudit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "customerId", nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "customer_id", updatable = false, nullable = false)
     private UUID customerId;
 
     @NotNull
@@ -41,7 +43,12 @@ public class Customer extends EntityAudit {
 
     @NotNull
     @Size(min = 6, max = 12, message = "Invalid Password [ must be 6 to 12 characters ]")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-
+    private String address;
+    private String dateOfBirth;
+    private String nationalId;
+    private String accountStatus;
+    private LocalDateTime lastLoginDate;
 
 }

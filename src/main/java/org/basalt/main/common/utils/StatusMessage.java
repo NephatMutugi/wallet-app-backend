@@ -19,6 +19,10 @@ public class StatusMessage {
     public static final String NO_LOGGED_IN_CUSTOMER = "Customer is not logged in!";
     public static final String DUPLICATE_BANK = "Bank Account already exists with given account number";
     public static final String BANK_NOT_FOUND = "Bank does not exist";
-
-
+    public static final String CUSTOMER_MSISDN_NOT_FOUND = "Customer not found with provided mobile number";
+    public static final String WRONG_PASSWORD = "Wrong Password";
+    public static final String INVALID_TOKEN = "Invalid Token";
+    public static final String LOGOUT_SUCCESS = "Logged Out Successfully!";
+    public static final String DUPLICATE_RECORD = "A record with the same details already exists";
+    public static final String MISSING_FIELDS = "Missing Mandatory Fields";
 }

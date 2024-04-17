@@ -174,4 +174,25 @@ public class CommonUtils {
         ResponsePayload<T> responsePayload = new ResponsePayload<>(header, null);
         return Mono.just(ResponseEntity.ok(responsePayload));
     }
+
+    // Masks an MSISDN by leaving the first three and last two digits visible
+    public static String maskMSISDN(String msisdn) {
+        if (msisdn == null || msisdn.length() < 6) return msisdn; // Return original if too short to mask
+        return msisdn.substring(0, 3) + "*****" + msisdn.substring(msisdn.length() - 2);
+    }
+
+    // Masks an email by hiding the local-part partially
+    public static String maskEmail(String email) {
+        if (email == null || !email.contains("@")) return email; // Return original if not valid email
+        String[] parts = email.split("@");
+        String local = parts[0];
+        int visibleLength = Math.min(local.length(), 2); // Show at least 2 characters
+        return local.substring(0, visibleLength) + "*****" + "@" + parts[1];
+    }
+
+    // Masks a generic ID by masking all but the last four characters
+    public static String maskID(String id) {
+        if (id == null || id.length() < 5) return id; // Return original if too short to mask
+        return "****" + id.substring(id.length() - 4);
+    }
 }

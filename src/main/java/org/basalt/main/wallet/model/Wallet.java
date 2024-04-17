@@ -2,7 +2,6 @@ package org.basalt.main.wallet.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.basalt.main.customer.model.Customer;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -26,9 +25,8 @@ public class Wallet {
 
     private BigDecimal balance;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "customer_Id")
-    private Customer customer;
+    @Column(name = "customer_Id")
+    private UUID customer;
 
 
 

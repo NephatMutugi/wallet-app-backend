@@ -16,4 +16,5 @@ public class StringConstants {
     public static final String LOG_FORMATTER = "TransactionID: {}| TransactionType: {}| ACTION: {}";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String JSON = "application/json";
+    public static final String TRANSACTION_LOG = "TRANSACTION: {}";
 }

@@ -11,6 +11,6 @@ import java.util.UUID;
  * Date 17/04/2024
  */
 public interface WalletRepo extends JpaRepository<Wallet, UUID> {
-    @Query("FROM Wallet w INNER JOIN w.customer c WHERE c.customerId=?1")
+    @Query("FROM Wallet w INNER JOIN w.customer c WHERE c=?1")
     Wallet showCustomerWalletDetails(UUID customerId);
 }

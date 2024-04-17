@@ -1,17 +1,18 @@
-package org.basalt.main.bank_account.service;
+package org.basalt.main.bank_account.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.basalt.main.bank_account.model.BankAccount;
 import org.basalt.main.bank_account.model.dto.BankAccountDTO;
 import org.basalt.main.bank_account.repository.BankAccountRepo;
+import org.basalt.main.bank_account.service.BankAccountService;
 import org.basalt.main.common.exceptions.ApplicationException;
 import org.basalt.main.common.payloads.ApiResponse;
 import org.basalt.main.common.payloads.LoggingParameter;
 import org.basalt.main.common.payloads.ResponsePayload;
 import org.basalt.main.common.utils.StatusCode;
 import org.basalt.main.common.utils.StatusMessage;
-import org.basalt.main.sessions.model.CurrentUserSession;
-import org.basalt.main.sessions.repository.CurrentSessionRepo;
+import org.basalt.main.customer.model.CurrentUserSession;
+import org.basalt.main.customer.repository.CurrentSessionRepo;
 import org.basalt.main.wallet.model.Wallet;
 import org.basalt.main.wallet.repository.WalletRepo;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class BankAccountServiceImpl implements BankAccountService{
+public class BankAccountServiceImpl implements BankAccountService {
 
     private final BankAccountRepo bankAccountRepo;
     private final CurrentSessionRepo currentSessionRepo;
@@ -43,7 +44,7 @@ public class BankAccountServiceImpl implements BankAccountService{
     @Override
     public ResponseEntity<ResponsePayload<BankAccount>> addBankAccount(LoggingParameter loggingParameter,  String key, BankAccountDTO request) {
         // Retrieve the current user's session using the key
-        CurrentUserSession currUserSession = currentSessionRepo.findByUuid(key);
+        CurrentUserSession currUserSession = currentSessionRepo.findByToken(key);
         if(currUserSession==null) {
             throw new ApplicationException(StatusCode.UNAUTHORIZED, loggingParameter.getRequestId(), StatusMessage.NO_LOGGED_IN_CUSTOMER, StatusMessage.NO_LOGGED_IN_CUSTOMER);
         }
@@ -65,7 +66,7 @@ public class BankAccountServiceImpl implements BankAccountService{
     @Override
     public ResponseEntity<ResponsePayload<Wallet>> removeBankAccount(LoggingParameter loggingParameter, String key, BankAccountDTO request) {
         // Retrieve the current user's session using the key
-        CurrentUserSession currUserSession = currentSessionRepo.findByUuid(key);
+        CurrentUserSession currUserSession = currentSessionRepo.findByToken(key);
         if(currUserSession==null) {
             throw new ApplicationException(StatusCode.UNAUTHORIZED, loggingParameter.getRequestId(), StatusMessage.NO_LOGGED_IN_CUSTOMER, StatusMessage.NO_LOGGED_IN_CUSTOMER);
         }
@@ -84,7 +85,7 @@ public class BankAccountServiceImpl implements BankAccountService{
     @Override
     public ResponseEntity<ResponsePayload<BankAccount>> viewBankAccount(LoggingParameter loggingParameter, String key, long accountNo) {
         // Retrieve the current user's session using the key
-        CurrentUserSession currUserSession = currentSessionRepo.findByUuid(key);
+        CurrentUserSession currUserSession = currentSessionRepo.findByToken(key);
         if(currUserSession==null) {
             throw new ApplicationException(StatusCode.UNAUTHORIZED, loggingParameter.getRequestId(), StatusMessage.NO_LOGGED_IN_CUSTOMER, StatusMessage.NO_LOGGED_IN_CUSTOMER);
         }
@@ -101,7 +102,7 @@ public class BankAccountServiceImpl implements BankAccountService{
     @Override
     public ResponseEntity<ResponsePayload<List<BankAccount>>> viewAllBankAccounts(LoggingParameter loggingParameter, String key) {
         // Retrieve the current user's session using the key
-        CurrentUserSession currUserSession = currentSessionRepo.findByUuid(key);
+        CurrentUserSession currUserSession = currentSessionRepo.findByToken(key);
         if(currUserSession==null) {
             throw new ApplicationException(StatusCode.UNAUTHORIZED, loggingParameter.getRequestId(), StatusMessage.NO_LOGGED_IN_CUSTOMER, StatusMessage.NO_LOGGED_IN_CUSTOMER);
         }

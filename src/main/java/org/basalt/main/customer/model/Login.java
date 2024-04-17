@@ -1,4 +1,4 @@
-package org.basalt.main.sessions.model;
+package org.basalt.main.customer.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
