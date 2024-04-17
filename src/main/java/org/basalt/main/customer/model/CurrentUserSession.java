@@ -16,7 +16,6 @@ import java.util.UUID;
 public class CurrentUserSession extends EntityAudit {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "userId", nullable = false, unique = true)
 	private UUID userId;
 	@Column(name = "token")

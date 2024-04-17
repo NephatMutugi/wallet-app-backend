@@ -25,4 +25,6 @@ public class StatusMessage {
     public static final String LOGOUT_SUCCESS = "Logged Out Successfully!";
     public static final String DUPLICATE_RECORD = "A record with the same details already exists";
     public static final String MISSING_FIELDS = "Missing Mandatory Fields";
+    public static final String ERROR_ADD_BENEFICIARIES = "Error while adding beneficiary!";
+    public static final String WALLET_NOT_FOUND = "Customer has no Active Wallets!";
 }

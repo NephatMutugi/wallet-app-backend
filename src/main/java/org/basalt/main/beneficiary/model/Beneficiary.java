@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.basalt.main.common.config.entityaudit.EntityAudit;
-import org.basalt.main.wallet.model.Wallet;
 
 import java.util.UUID;
 
@@ -35,9 +34,8 @@ public class Beneficiary extends EntityAudit {
     private String beneficiaryName;
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "walletId" ,referencedColumnName = "walletId")
-    private Wallet wallet;
+    @Column(name = "walletId")
+    private UUID walletId;
 
     public Beneficiary(String beneficiaryMobileNumber, String beneficiaryName) {
         this.beneficiaryMobileNumber = beneficiaryMobileNumber;
