@@ -1,0 +1,51 @@
+spring:
+    application:
+        name: ms-basalt-walletapp
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/wallet_app
+        password: nephatmuchiri
+        username: nephatmuchiri
+#        password: postgres
+#        username: postgres
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                format_sql: true
+        show-sql: true
+    main:
+        allow-bean-definition-overriding: true
+    kafka:
+        producer:
+          bootstrap-servers: localhost:9092
+          key-serializer: org.apache.kafka.common.serialization.StringSerializer
+          value-serializer: org.apache.kafka.common.serialization.StringSerializer
+        consumer:
+            bootstrap-servers: localhost:9092
+            group-id: debit-group
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            auto-offset-reset: earliest
+        bootstrap-servers: localhost:9092
+
+    mail:
+        host: sandbox.smtp.mailtrap.io
+        password: 7467c2a3aedff8
+        port: 2525
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
+        username: 7dda61b588da0f
+
+app:
+    allowed-systems: web, app
+    username: admin
+    password: admin
+    activation-code-length: 6
+    activation-code-duration: 900000
+    secret-key: basalt-secret-key-should-not-be-null
