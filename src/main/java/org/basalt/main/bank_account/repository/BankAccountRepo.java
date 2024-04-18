@@ -13,10 +13,7 @@ import java.util.UUID;
  */
 public interface BankAccountRepo extends JpaRepository<BankAccount, UUID> {
 
-    @Query(value = "FROM BankAccount b INNER JOIN b.wallet w WHERE w.walletId=?1")
-    List<BankAccount> findByWallet(UUID walletId);
-
-    @Query(value = "FROM BankAccount b INNER JOIN b.wallet w WHERE w.walletId=?1")
+    @Query(value = "FROM BankAccount b WHERE b.walletId=?1")
     List<BankAccount> findAllByWallet(UUID walletId);
     BankAccount findByAccountNo(long accountNumber);
 }

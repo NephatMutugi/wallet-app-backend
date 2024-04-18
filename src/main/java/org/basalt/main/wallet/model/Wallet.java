@@ -26,7 +26,7 @@ public class Wallet {
     private BigDecimal balance;
 
     @Column(name = "customer_Id")
-    private UUID customer;
+    private UUID customerId;
 
 
 

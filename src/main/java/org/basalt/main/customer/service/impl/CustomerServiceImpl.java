@@ -71,7 +71,7 @@ public class CustomerServiceImpl implements CustomerService {
         log.info("CREATE WALLET: CustomerName: {} | CustomerMobile: {} | CustomerEmail: {}", request.getCustomerName(), maskMSISDN(request.getMobileNumber()), maskEmail(request.getEmail()));
         // CREATE A WALLET FOR THE CUSTOMER IMMEDIATELY AFTER REGISTRATION
         Wallet wallet = Wallet.builder()
-                .customer(customer.getCustomerId())
+                .customerId(customer.getCustomerId())
                 .balance(BigDecimal.ZERO).build();
         walletRepo.save(wallet);
         ApiResponse.Header header = new ApiResponse.Header(loggingParameter.getRequestId(), OK, SUCCESS, SUCCESS, LocalDateTime.now().toString());

@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.basalt.main.common.config.entityaudit.EntityAudit;
-import org.basalt.main.wallet.model.Wallet;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -40,8 +39,8 @@ public class BankAccount extends EntityAudit {
     private BigDecimal balance;
 
 
-    @ManyToOne(cascade= CascadeType.PERSIST)
-    private Wallet wallet;
+    @Column(name = "wallet_id")
+    private UUID walletId;
 
 
     public BankAccount(@NotNull long accountNo, @NotNull String bankCode,

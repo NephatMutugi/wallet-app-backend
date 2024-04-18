@@ -22,12 +22,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.basalt.main.common.utils.StatusCode.*;
 import static org.basalt.main.common.utils.StatusMessage.*;
-import static org.basalt.main.common.utils.StatusMessage.DUPLICATE_RECORD;
 
 /**
  * @ Author Nephat Muchiri
@@ -54,18 +52,17 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
         if(currUserSession==null) {
             throw new ApplicationException(StatusCode.UNAUTHORIZED, loggingParameter.getRequestId(), StatusMessage.NO_LOGGED_IN_CUSTOMER, StatusMessage.NO_LOGGED_IN_CUSTOMER);
         }
-
-        Optional<Customer> customerOptional = customerRepo.findById(currUserSession.getUserId());
-        if (customerOptional.isEmpty()){
+        Customer customer = customerRepo.findCustomerByCustomerId(currUserSession.getUserId());
+        if (customer == null){
             log.error("CUSTOMER NOT FOUND: {}",currUserSession.getUserId());
             throw new ApplicationException(NOT_FOUND, loggingParameter.getRequestId(), ERROR_ADD_BENEFICIARIES, ERROR_ADD_BENEFICIARIES);
         }
 
-        Wallet wallet = walletRepo.showCustomerWalletDetails(customerOptional.get().getCustomerId());
+        Wallet wallet = walletRepo.findWalletByCustomerId(customer.getCustomerId());
         if (wallet == null){
             throw new ApplicationException(NOT_FOUND, loggingParameter.getRequestId(), WALLET_NOT_FOUND, WALLET_NOT_FOUND);
         }
-
+        log.info("WALLET!!!!! {}", wallet.getWalletId());
         Beneficiary beneficiary = beneficiaryRepo.findBeneficiaryByBeneficiaryMobileNumber(request.getBeneficiaryMobileNumber());
         if (!(beneficiary == null)){
             throw new ApplicationException(BAD_REQUEST, loggingParameter.getRequestId(), DUPLICATE_RECORD, DUPLICATE_RECORD);
@@ -92,7 +89,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
             throw new ApplicationException(StatusCode.UNAUTHORIZED, loggingParameter.getRequestId(), StatusMessage.NO_LOGGED_IN_CUSTOMER, StatusMessage.NO_LOGGED_IN_CUSTOMER);
         }
 
-        Wallet wallet = walletRepo.showCustomerWalletDetails(currUserSession.getUserId());
+        Wallet wallet = walletRepo.findWalletByCustomerId(currUserSession.getUserId());
         if (wallet == null){
             log.error("WALLET NOT FOUND");
             throw new ApplicationException(NOT_FOUND, loggingParameter.getRequestId(), RECORD_NOT_FOUND, RECORD_NOT_FOUND);
@@ -129,7 +126,7 @@ public class BeneficiaryServiceImpl implements BeneficiaryService {
         }
 
         try {
-            Wallet wallet = walletRepo.showCustomerWalletDetails(currUserSession.getUserId());
+            Wallet wallet = walletRepo.findWalletByCustomerId(currUserSession.getUserId());
             Beneficiary beneficiary = beneficiaryRepo.findBeneficiaryByWalletIdAndBeneficiaryMobileNumber(wallet.getWalletId(), request.getBeneficiaryMobileNumber());
             beneficiaryRepo.delete(beneficiary);
             ApiResponse.Header header = new ApiResponse.Header(loggingParameter.getRequestId(), OK, "Deleted Successfully", "Deleted Successfully", LocalDateTime.now().toString());

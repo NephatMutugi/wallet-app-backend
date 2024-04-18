@@ -33,7 +33,7 @@ public class BankAccountController {
     public ResponseEntity<ResponsePayload<BankAccount>> addBankAccount(
             @RequestHeader HttpHeaders headers,
             @RequestParam String key,
-            BankAccountDTO request) {
+            @RequestBody BankAccountDTO request) {
         LoggingParameter loggingParameter = commonUtils.validateHeaders(headers);
         return bankAccountService.addBankAccount(loggingParameter, key, request);
     }
@@ -43,7 +43,7 @@ public class BankAccountController {
     public ResponseEntity<ResponsePayload<Wallet>> removeBankAccount(
             @RequestHeader HttpHeaders headers,
             @RequestParam String key,
-            BankAccountDTO request) {
+            @RequestBody BankAccountDTO request) {
         LoggingParameter loggingParameter = commonUtils.validateHeaders(headers);
         return bankAccountService.removeBankAccount(loggingParameter, key, request);
     }

@@ -17,4 +17,6 @@ public interface CustomerRepo extends JpaRepository<Customer, UUID> {
     Customer findCustomerByMobileNumber(String mobileNumber);
 
     Customer findCustomerByMobileNumberOrEmailOrNationalId(@NotNull @Size(min = 10, max = 13, message = "Invalid Mobile Number [ 10 Digit Only ] ") String mobileNumber, @NotNull @Size(max = 255, message = "Invalid Email Address") String email, String nationalId);
+
+    Customer findCustomerByCustomerId(UUID customerId);
 }

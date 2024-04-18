@@ -54,10 +54,13 @@ public class BankAccountServiceImpl implements BankAccountService {
             throw new ApplicationException(StatusCode.CONFLICT, loggingParameter.getRequestId(), StatusMessage.DUPLICATE_BANK, StatusMessage.DUPLICATE_BANK);
         }
 
-        Wallet wallet =  walletRepo.showCustomerWalletDetails(currUserSession.getUserId());
+        Wallet wallet =  walletRepo.findWalletByCustomerId(currUserSession.getUserId());
         BankAccount createBankAccount = new BankAccount(request.getAccountNo(), request.getBankCode(), request.getBankName(), request.getBalance());
-        createBankAccount.setWallet(wallet);
+
+        createBankAccount.setWalletId(wallet.getWalletId());
         createBankAccount = bankAccountRepo.save(createBankAccount);
+        wallet.setBalance(wallet.getBalance().add(request.getBalance()));
+        walletRepo.save(wallet);
         ApiResponse.Header header = new ApiResponse.Header(loggingParameter.getRequestId(), StatusCode.OK, StatusMessage.SUCCESS, StatusMessage.SUCCESS, LocalDateTime.now().toString());
         return ResponseEntity.ok(new ResponsePayload<>(header, createBankAccount));
     }
@@ -75,8 +78,10 @@ public class BankAccountServiceImpl implements BankAccountService {
         if (bankAccount == null){
             throw new ApplicationException(StatusCode.BAD_REQUEST, loggingParameter.getRequestId(), StatusMessage.BANK_NOT_FOUND, StatusMessage.BANK_NOT_FOUND);
         }
-        Wallet wallet = bankAccount.getWallet();
+        Wallet wallet = walletRepo.findWalletByWalletId(bankAccount.getWalletId());
+        wallet.setBalance(wallet.getBalance().subtract(bankAccount.getBalance()));
         bankAccountRepo.delete(bankAccount);
+        walletRepo.save(wallet);
         ApiResponse.Header header = new ApiResponse.Header(loggingParameter.getRequestId(), StatusCode.OK, StatusMessage.SUCCESS, StatusMessage.SUCCESS, LocalDateTime.now().toString());
         return ResponseEntity.ok(new ResponsePayload<>(header, wallet));
     }
@@ -106,7 +111,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         if(currUserSession==null) {
             throw new ApplicationException(StatusCode.UNAUTHORIZED, loggingParameter.getRequestId(), StatusMessage.NO_LOGGED_IN_CUSTOMER, StatusMessage.NO_LOGGED_IN_CUSTOMER);
         }
-        List<BankAccount> bankAccounts = bankAccountRepo.findAllByWallet(walletRepo.showCustomerWalletDetails(currUserSession.getUserId()).getWalletId());
+        List<BankAccount> bankAccounts = bankAccountRepo.findAllByWallet(walletRepo.findWalletByCustomerId(currUserSession.getUserId()).getWalletId());
         if (bankAccounts.isEmpty()){
             throw new ApplicationException(StatusCode.BAD_REQUEST, loggingParameter.getRequestId(), StatusMessage.BANK_NOT_FOUND, StatusMessage.BANK_NOT_FOUND);
         }
