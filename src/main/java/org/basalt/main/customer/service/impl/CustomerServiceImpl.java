@@ -10,6 +10,7 @@ import org.basalt.main.common.utils.StatusMessage;
 import org.basalt.main.customer.model.CurrentUserSession;
 import org.basalt.main.customer.model.Customer;
 import org.basalt.main.customer.model.dto.AccountStatus;
+import org.basalt.main.customer.model.dto.CustomerDto;
 import org.basalt.main.customer.model.dto.PasswordResetDto;
 import org.basalt.main.customer.repository.CurrentSessionRepo;
 import org.basalt.main.customer.repository.CustomerRepo;
@@ -50,7 +51,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public ResponseEntity<ResponsePayload<Customer>> createCustomerAccount(LoggingParameter loggingParameter, Customer request) {
+    public ResponseEntity<ResponsePayload<CustomerDto>> createCustomerAccount(LoggingParameter loggingParameter, Customer request) {
         log.info(TRANSACTION_LOG, "CREATE CUSTOMER...");
         // Check if the @Required fields are present, if not, throw exception
         if (request.getCustomerName() == null|| request.getPassword() == null|| request.getEmail() == null || request.getMobileNumber() == null|| request.getNationalId() == null){
@@ -73,9 +74,14 @@ public class CustomerServiceImpl implements CustomerService {
         Wallet wallet = Wallet.builder()
                 .customerId(customer.getCustomerId())
                 .balance(BigDecimal.ZERO).build();
-        walletRepo.save(wallet);
+        CustomerDto response = toCustomerDto(customer, walletRepo.save(wallet));
         ApiResponse.Header header = new ApiResponse.Header(loggingParameter.getRequestId(), OK, SUCCESS, SUCCESS, LocalDateTime.now().toString());
-        return ResponseEntity.ok(new ResponsePayload<>(header, customer));
+        return ResponseEntity.ok(new ResponsePayload<>(header, response));
+    }
+
+    @Override
+    public ResponseEntity<ResponsePayload<CustomerDto>> findCustomerByMobileNumber(LoggingParameter loggingParameter, String mobileNumber) {
+        return null;
     }
 
     @Override
@@ -166,6 +172,21 @@ public class CustomerServiceImpl implements CustomerService {
         currentSessionRepo.delete(currUserSession);
         ApiResponse.Header header = new ApiResponse.Header(loggingParameter.getRequestId(), OK, "Password updated successfully", "Password updated successfully", LocalDateTime.now().toString());
         return ResponseEntity.ok(new ResponsePayload<>(header, existingCustomer));
+    }
+
+    private CustomerDto toCustomerDto(Customer customer, Wallet wallet) {
+        return CustomerDto.builder()
+                .customerId(customer.getCustomerId())
+                .customerName(customer.getCustomerName())
+                .mobileNumber(customer.getMobileNumber())
+                .email(customer.getEmail())
+                .address(customer.getAddress())
+                .dateOfBirth(customer.getDateOfBirth())
+                .nationalId(customer.getNationalId())
+                .accountStatus(customer.getAccountStatus())
+                .lastLoginDate(customer.getLastLoginDate())
+                .wallet(wallet)
+                .build();
     }
 
 }

@@ -27,4 +27,7 @@ public class StatusMessage {
     public static final String MISSING_FIELDS = "Missing Mandatory Fields";
     public static final String ERROR_ADD_BENEFICIARIES = "Error while adding beneficiary!";
     public static final String WALLET_NOT_FOUND = "Customer has no Active Wallets!";
+    public static final String INVALID_TRANSACTION_TYPE = "Invalid Transaction Type (DEBIT or CREDIT)";
+    public static final String NEGATIVE_CREDIT = "The amount to credit cannot be negative.";
+    public static final String INSUFFICIENT_FUNDS = "Insufficient Funds!";
 }

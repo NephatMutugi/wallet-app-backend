@@ -22,12 +22,8 @@ public class Wallet {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "walletId", nullable = false)
     private UUID walletId;
-
     private BigDecimal balance;
-
     @Column(name = "customer_Id")
     private UUID customerId;
-
-
 
 }

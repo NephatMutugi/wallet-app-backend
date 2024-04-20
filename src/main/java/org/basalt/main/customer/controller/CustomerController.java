@@ -4,6 +4,7 @@ import org.basalt.main.common.payloads.LoggingParameter;
 import org.basalt.main.common.payloads.ResponsePayload;
 import org.basalt.main.common.utils.CommonUtils;
 import org.basalt.main.customer.model.Customer;
+import org.basalt.main.customer.model.dto.CustomerDto;
 import org.basalt.main.customer.model.dto.PasswordResetDto;
 import org.basalt.main.customer.service.CustomerService;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +30,7 @@ public class CustomerController {
 
     // Endpoint to create a new customer account
     @PostMapping("/create")
-    public ResponseEntity<ResponsePayload<Customer>> createCustomerAccount(
+    public ResponseEntity<ResponsePayload<CustomerDto>> createCustomerAccount(
             @RequestHeader HttpHeaders headers,
             @RequestBody Customer request) {
         LoggingParameter loggingParameter = commonUtils.validateHeaders(headers);

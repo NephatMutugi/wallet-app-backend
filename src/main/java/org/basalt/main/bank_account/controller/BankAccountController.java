@@ -59,7 +59,7 @@ public class BankAccountController {
     }
 
     // Endpoint to view all bank accounts for a user using GET method
-    @GetMapping("/viewAll")
+    @GetMapping("/view-all")
     public ResponseEntity<ResponsePayload<List<BankAccount>>> viewAllBankAccounts(
             @RequestHeader HttpHeaders headers,
             @RequestParam String key) {
