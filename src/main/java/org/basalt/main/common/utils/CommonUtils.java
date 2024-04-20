@@ -3,13 +3,14 @@ package org.basalt.main.common.utils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import org.basalt.main.common.payloads.LoggingParameter;
-import org.basalt.main.common.payloads.ResponsePayload;
 import org.basalt.main.common.config.AppProperties;
 import org.basalt.main.common.exceptions.ApplicationException;
 import org.basalt.main.common.payloads.ApiResponse;
+import org.basalt.main.common.payloads.LoggingParameter;
+import org.basalt.main.common.payloads.ResponsePayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,11 @@ public class CommonUtils {
 
     public CommonUtils(AppProperties appProperties) {
         this.appProperties = appProperties;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
     public LoggingParameter validateHeaders(HttpHeaders headers) {

@@ -7,7 +7,7 @@ import lombok.*;
 import org.basalt.main.common.config.entityaudit.EntityAudit;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -16,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Transaction extends EntityAudit {
 
    @Id
@@ -24,7 +25,7 @@ public class Transaction extends EntityAudit {
    @JsonSerialize(using = ToStringSerializer.class)
    private UUID transactionId;
    private String transactionType;
-   private LocalDate transactionDate;
+   private Date transactionDate;
    private BigDecimal amount;
    private String Description;
    @JsonSerialize(using = ToStringSerializer.class)

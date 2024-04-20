@@ -12,18 +12,23 @@ import org.basalt.main.customer.model.CurrentUserSession;
 import org.basalt.main.customer.model.Customer;
 import org.basalt.main.customer.repository.CurrentSessionRepo;
 import org.basalt.main.customer.repository.CustomerRepo;
+import org.basalt.main.transactions.model.Transaction;
 import org.basalt.main.wallet.model.Wallet;
 import org.basalt.main.wallet.model.dto.FundsTransferRequest;
 import org.basalt.main.wallet.model.dto.FundsTransferResponse;
 import org.basalt.main.wallet.model.dto.WalletDto;
 import org.basalt.main.wallet.repository.WalletRepo;
+import org.basalt.main.wallet.service.KafkaProducer;
 import org.basalt.main.wallet.service.WalletService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static org.basalt.main.common.utils.CommonUtils.getJsonString;
 import static org.basalt.main.common.utils.StatusCode.BAD_REQUEST;
@@ -40,11 +45,13 @@ public class WalletServiceImpl implements WalletService {
     private final WalletRepo walletRepo;
     private final CustomerRepo customerRepo;
     private final CurrentSessionRepo currentSessionRepo;
+    private final KafkaProducer kafkaProducer;
 
-    public WalletServiceImpl(WalletRepo walletRepo, CustomerRepo customerRepo, CurrentSessionRepo currentSessionRepo) {
+    public WalletServiceImpl(WalletRepo walletRepo, CustomerRepo customerRepo, CurrentSessionRepo currentSessionRepo, KafkaProducer kafkaProducer) {
         this.walletRepo = walletRepo;
         this.customerRepo = customerRepo;
         this.currentSessionRepo = currentSessionRepo;
+        this.kafkaProducer = kafkaProducer;
     }
 
     @Override
@@ -104,6 +111,16 @@ public class WalletServiceImpl implements WalletService {
 
         walletRepo.saveAll(List.of(fromWallet, toWallet));
 
+        // Send transaction to KAFKA for saving
+        Transaction transaction = Transaction.builder()
+                .transactionId(UUID.fromString(loggingParameter.getRequestId()))
+                .transactionType("DEBIT")
+                .transactionDate(Date.from(Instant.now()))
+                .walletId(fromWallet.getWalletId())
+                .Description("Debit From: " + fromWallet.getWalletId() + ". Credit To: " + toWallet.getWalletId())
+                .amount(request.getAmount())
+                .build();
+        kafkaProducer.sendTransaction("transactions_topic", transaction);
         return buildFundsTransferResponse(loggingParameter, fromWallet, request.getAmount());
     }
 
@@ -118,6 +135,15 @@ public class WalletServiceImpl implements WalletService {
             wallet.setBalance(wallet.getBalance().add(request.getAmount()));
             walletRepo.save(wallet);
 
+            Transaction transaction = Transaction.builder()
+                    .transactionId(UUID.fromString(loggingParameter.getRequestId()))
+                    .transactionType("CREDIT")
+                    .transactionDate(Date.from(Instant.now()))
+                    .walletId(wallet.getWalletId())
+                    .Description("Credit To: " + wallet.getWalletId())
+                    .amount(request.getAmount())
+                    .build();
+            kafkaProducer.sendTransaction("transactions_topic", transaction);
             return buildFundsTransferResponse(loggingParameter, wallet, request.getAmount());
         } catch (Exception e){
             throw new RuntimeException("Error while adding funds");
