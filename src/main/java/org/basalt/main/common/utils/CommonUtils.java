@@ -7,18 +7,14 @@ import org.basalt.main.common.config.AppProperties;
 import org.basalt.main.common.exceptions.ApplicationException;
 import org.basalt.main.common.payloads.ApiResponse;
 import org.basalt.main.common.payloads.LoggingParameter;
-import org.basalt.main.common.payloads.ResponsePayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -143,43 +139,7 @@ public class CommonUtils {
         );
     }
 
-    /**
-     * Handles Scenarios where queries records do not exist
-     *
-     * @param loggingParameter the logging parameters used for tracing and logging.
-     * @param <T> the type of the response payload content.
-     * @return a Mono containing a ResponseEntity with a generic ResponsePayload.
-     */
-    public static <T> Mono<ResponseEntity<ResponsePayload<T>>> recordNotFoundResponse(LoggingParameter loggingParameter) {
-        ApiResponse.Header header = new ApiResponse.Header(
-                loggingParameter.getRequestId(),
-                StatusCode.NOT_FOUND,
-                StatusMessage.RECORD_NOT_FOUND,
-                StatusMessage.RECORD_NOT_FOUND,
-                Instant.now().toString());
-        ResponsePayload<T> responsePayload = new ResponsePayload<>(header, null);
-        return Mono.just(ResponseEntity.ok(responsePayload));
-    }
 
-    /**
-     * Handles illegal state errors generically across multiple services.
-     *
-     * @param loggingParameter the logging parameters used for tracing and logging.
-     * @param e the exception that triggered the error handling.
-     * @param <T> the type of the response payload content.
-     * @return a Mono containing a ResponseEntity with a generic ResponsePayload.
-     */
-    public static <T> Mono<ResponseEntity<ResponsePayload<T>>> handleIllegalStateExceptionErrors(LoggingParameter loggingParameter, Throwable e) {
-        ApiResponse.Header header = new ApiResponse.Header(
-                loggingParameter.getRequestId(),
-                StatusCode.OK,
-                e.getMessage(),
-                StatusMessage.CUSTOMER_SERVICE_UNAVAILABLE,
-                Instant.now().toString());
-
-        ResponsePayload<T> responsePayload = new ResponsePayload<>(header, null);
-        return Mono.just(ResponseEntity.ok(responsePayload));
-    }
 
     // Masks an MSISDN by leaving the first three and last two digits visible
     public static String maskMSISDN(String msisdn) {

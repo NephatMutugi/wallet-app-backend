@@ -42,6 +42,10 @@ spring:
                         enable: true
         username: 7dda61b588da0f
 
+server:
+  port: 8080
+
+
 app:
     allowed-systems: web, app
     username: admin
@@ -49,3 +53,11 @@ app:
     activation-code-length: 6
     activation-code-duration: 900000
     secret-key: basalt-secret-key-should-not-be-null
+
+springdoc:
+    api-docs:
+        enabled: true
+        path: /api-docs
+    swagger-ui:
+      enabled: true
+      path: /swagger-ui.html

@@ -3,7 +3,7 @@ package org.basalt.main.transactions.repository;
 import org.basalt.main.transactions.model.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,7 +16,7 @@ public interface TransactionsRepo extends JpaRepository<Transaction, UUID> {
 
     List<Transaction> findTransactionByWalletId(UUID walletId);
 
-    List<Transaction> findByTransactionDate(LocalDate transactionDate);
+    List<Transaction> findTransactionByTransactionDate(Date transactionDate);
 
-    List<Transaction> findByTransactionDateBetween(LocalDate startSate, LocalDate endDate);
+    List<Transaction> findByTransactionDateBetween(Date startSate, Date endDate);
 }
