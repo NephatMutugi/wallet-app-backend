@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/v1/auth")
+@CrossOrigin(origins = "http://localhost:3000")
 public class LoginController {
 
     private final LoginService loginService;
@@ -27,13 +28,12 @@ public class LoginController {
     }
 
     // Endpoint for user login using POST method
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<ResponsePayload<CurrentUserSession>> login(
             @RequestHeader HttpHeaders headers,
-            @RequestParam String mobileNumber,
-            @RequestParam String password) {
+            @RequestBody Login login) {
         LoggingParameter loggingParameter = commonUtils.validateHeaders(headers);
-        Login loginRequest = new Login(mobileNumber, password);
+        Login loginRequest = new Login(login.getMobileNumber(), login.getPassword());
         return loginService.login(loggingParameter, loginRequest);
     }
 

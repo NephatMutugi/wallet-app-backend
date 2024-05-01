@@ -55,3 +55,8 @@ spring.datasource.url=jdbc:postgresql://localhost:5432/wallet
 spring.datasource.username=postgres
 spring.datasource.password=password
 spring.kafka.bootstrap-servers=localhost:9092
+```
+
+### Extra: Starting Kafka
+```bash
+docker-compose -f ./zk-single-kafka-single.yml up   

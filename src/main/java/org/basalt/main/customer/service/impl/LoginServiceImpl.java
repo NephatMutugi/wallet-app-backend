@@ -61,8 +61,7 @@ public class LoginServiceImpl implements LoginService {
         String token = generateSecureToken();
         CurrentUserSession currentUserSession = CurrentUserSession.builder()
                 .userId(existingCustomer.getCustomerId())
-                .token(token)
-                .localDateTime(LocalDateTime.now()).build();
+                .token(token).build();
 
         // UPDATE LAST LOGIN DATE
         existingCustomer.setLastLoginDate(LocalDateTime.now());

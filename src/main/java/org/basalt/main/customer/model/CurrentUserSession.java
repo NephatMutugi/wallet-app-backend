@@ -1,10 +1,11 @@
 package org.basalt.main.customer.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 import org.basalt.main.common.config.entityaudit.EntityAudit;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +21,4 @@ public class CurrentUserSession extends EntityAudit {
 	private UUID userId;
 	@Column(name = "token")
 	private String token;
-	private LocalDateTime localDateTime;
-	
 }
